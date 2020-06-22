@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password!'],
     minlength: 8,
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -35,6 +36,12 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// Set correctPassword as global method on all the documents
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+// Encrypt the password
 userSchema.pre('save', async function (next) {
   // Only Run if Password actually modified
   if (!this.isModified('password')) return next();
