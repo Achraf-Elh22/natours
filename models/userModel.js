@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
       message: 'Password are not the same',
     },
   },
+  passwordChangedAt: Date,
 });
 
 // Set correctPassword as global method on all the documents
@@ -51,6 +52,17 @@ userSchema.pre('save', async function (next) {
   // delete Confirm password
   this.passwordConfirm = undefined;
 });
+
+userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+
+    return changedTimestamp > JWTTimestamp;
+  }
+
+  // False mean Password Not Changed
+  return false;
+};
 
 const User = mongoose.model('User', userSchema);
 
