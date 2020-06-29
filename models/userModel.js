@@ -60,7 +60,7 @@ userSchema.pre('save', async function (next) {
   // delete Confirm password
   this.passwordConfirm = undefined;
 });
-
+// Update ChangePasswordAt property for the user (RESET PASSWORD FUNCTIONAMITY)
 userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
 
