@@ -110,7 +110,7 @@ const tourSchema = new mongoose.Schema(
       },
     ],
   },
-
+  // Showing the virtual property in the output
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
