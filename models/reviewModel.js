@@ -64,7 +64,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
     });
   }
 };
-
+reviewSchema.indexes({ tour: 1, user: 1 }, { unique: true });
 reviewSchema.post('save', function () {
   this.constructor.calcAverageRatings(this.tour);
 });
