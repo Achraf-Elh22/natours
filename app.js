@@ -13,6 +13,7 @@ const GlobalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
 
@@ -70,22 +71,13 @@ app.use((req, res, next) => {
 
 console.log(process.env.NODE_ENV);
 // Routes
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    tour: 'The Park Camper',
-    user: 'Achraf',
-  });
-});
 
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 
 app.use('*', (req, res, next) => {
-  // const err = new Error(`Can't Find ${req.originalUrl} on this Server!!!`);
-  // err.statusCode = 404;
-  // err.status = 'Fail';
-
   next(new AppError(`Can't Find ${req.originalUrl} on this Server!!!`, 404));
 });
 
