@@ -64,6 +64,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 1)getting The token and check if it's there
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
   if (!token) return next(new AppError('You are not logged in! Please log in to get access!', 401));
 
@@ -80,6 +82,36 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = user;
+  next();
+});
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // roles ["admin","lead-guide"]. role = "user"
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError("You don't have the permission to perform this action", 403));
+    }
+
+    next();
+  };
+};
+
+// only for rendered pages, no errors!!
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+
+    // Check if the user still exists
+    const user = await User.findById(decoded.id);
+    if (!user) return next();
+
+    // Check if user changed password after the token was issued
+    if (user.changePasswordAfter(decoded.iat)) return next();
+
+    // There is a logged in user
+    res.locals.user = user; // Send the user to Pug template
+    return next();
+  }
   next();
 });
 
