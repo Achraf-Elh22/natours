@@ -112,6 +112,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = user;
+  res.locals.user = user;
   next();
 });
 
@@ -162,7 +163,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   } catch (err) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
-    console.log(err);
     await user.save({ validateBeforeSave: false });
     return next(new AppError('There was an error sendng the email.Try again later!', 500));
   }
