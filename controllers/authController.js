@@ -127,17 +127,6 @@ exports.restrictTo = (...roles) => {
   };
 };
 
-exports.restrictTo = (...roles) => {
-  return (req, res, next) => {
-    // roles ["admin","lead-guide"]. role = "user"
-    if (!roles.includes(req.user.role)) {
-      return next(new AppError("You don't have the permission to perform this action", 403));
-    }
-
-    next();
-  };
-};
-
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based email on posted email
   const user = await User.findOne({ email: req.body.email });
