@@ -32,7 +32,7 @@ export const logout = async () => {
     });
     if ((res.data.status = 'success')) {
       location.reload(true);
-      // location.assign('/');
+      location.assign('/');
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
