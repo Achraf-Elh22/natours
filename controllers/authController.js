@@ -104,7 +104,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   // 3) Check if the user still exists
   const user = await User.findById(decoded.id);
-  if (!user) return next(new AppError("The uesr belonging to this token doesn't exist anymore."));
+  if (!user) return next(new AppError("The user belonging to this token doesn't exist anymore."));
 
   // 4) Check if user changed password after the token was issued
   if (user.changePasswordAfter(decoded.iat)) {
