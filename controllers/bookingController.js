@@ -4,6 +4,7 @@ const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked Tour tourId
@@ -47,3 +48,9 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   res.redirect(req.originalUrl.split('?')[0]);
   // Url after redirect => `${req.protocol}://${req.get('host')}/
 });
+
+exports.getAllBookings = factory.getAll(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.createBooking = factory.createOne(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);
