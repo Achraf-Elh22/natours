@@ -24,6 +24,7 @@
     "@babel/polyfill": "^7.10.4",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "dot-prop": "^5.2.0",
     "dotenv": "^8.2.0",
