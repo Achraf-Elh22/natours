@@ -8,10 +8,11 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
-const cors = require("cors");
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const GlobalErrorHandler = require('./controllers/errorController');
+const webhookCheckout = require('./controllers/bookingController');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -33,7 +34,7 @@ app.enable('trust proxy');
 // Implement CORS
 app.use(cors());
 //Implement cors form non-simple request (preflight phase)
-app.options("x",cors());
+app.options('x', cors());
 // Set security HTTP headers
 app.use(helmet());
 
@@ -49,6 +50,8 @@ const limiter = rateLimit({
   message: 'Too Many Requests from this IP, please try again in an hour!',
 });
 app.use('/api', limiter);
+// the reason for putting is here and not in the bookingCOntroller is that we dont want the webhook to be in Json => Before express parser
+app.use('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
