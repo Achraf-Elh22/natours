@@ -51,7 +51,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 // the reason for putting is here and not in the bookingCOntroller is that we dont want the webhook to be in Json => Before express parser
-app.use('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout);
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
