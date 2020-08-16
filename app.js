@@ -9,6 +9,7 @@ const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const AppError = require('./utils/appError');
 const GlobalErrorHandler = require('./controllers/errorController');
@@ -50,8 +51,13 @@ const limiter = rateLimit({
   message: 'Too Many Requests from this IP, please try again in an hour!',
 });
 app.use('/api', limiter);
+
 // the reason for putting is here and not in the bookingCOntroller is that we dont want the webhook to be in Json => Before express parser
-app.post('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout);
+app.post(
+  '/webhook-checkout',
+  bodyParser.raw({ type: 'application/json' }),
+  webhookCheckout.webhookCheckout
+);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
