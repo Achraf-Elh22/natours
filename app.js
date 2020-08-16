@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require("cors");
 
 const AppError = require('./utils/appError');
 const GlobalErrorHandler = require('./controllers/errorController');
@@ -29,6 +30,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.enable('trust proxy');
 
 // Global Middlewares
+// Implement CORS
+app.use(cors());
+//Implement cors form non-simple request (preflight phase)
+app.options("x",cors());
 // Set security HTTP headers
 app.use(helmet());
 
@@ -93,5 +98,4 @@ app.use('*', (req, res, next) => {
 });
 
 app.use(GlobalErrorHandler);
-
 module.exports = app;
