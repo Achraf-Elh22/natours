@@ -54,7 +54,7 @@ app.use('/api', limiter);
 
 // the reason for putting is here and not in the bookingCOntroller is that we dont want the webhook to be in Json => Before express parser
 app.post(
-  '/webhook-checkout',
+  '/webhooks-checkout',
   bodyParser.raw({ type: 'application/json' }),
   webhookCheckout.webhookCheckout
 );
