@@ -1,6 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 
 const catchAsync = require('../utils/catchAsync');
@@ -33,6 +34,13 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     session,
   });
 });
+
+const createBookingCheckout = async (session) => {
+  const tour = session.client_reference_id;
+  const user = (await User.findOne({ email: session.customer_email })).id;
+  const price = session.display_items[0].amount / 100;
+  await Booking.create({ tour, user, price });
+};
 
 exports.webhookCheckout = (req, res, next) => {
   const signature = req.headers['stripe-signature'];
